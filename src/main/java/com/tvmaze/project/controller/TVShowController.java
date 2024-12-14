@@ -7,29 +7,28 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController // Marks this class as a REST API
-@RequestMapping("/tvshows") // Base URL for this API
+@RestController
+@RequestMapping("/tvshows")
 public class TVShowController {
 
-    @Autowired // Injects the service into this controller
+    @Autowired
     private TVShowService tvShowService;
 
-    // Endpoint: GET /tvshows
+    // Get all TV shows
     @GetMapping
     public List<TVShow> getAllTVShows() {
         return tvShowService.getAllTVShows();
     }
 
-    // Endpoint: GET /tvshows/{id}
+    // Get a single TV show by ID
     @GetMapping("/{id}")
-    public TVShow getTVShowById(@PathVariable String id) {
+    public TVShow getTVShowById(@PathVariable Long id) {
         return tvShowService.getTVShowById(id);
     }
 
-    // Endpoint: POST /tvshows
+    // Add or update a TV show
     @PostMapping
-    public void addTVShow(@RequestBody TVShow tvShow) {
-        tvShowService.addTVShow(tvShow);
+    public void addOrUpdateTVShow(@RequestBody TVShow tvShow) {
+        tvShowService.addOrUpdateTVShow(tvShow);
     }
 }
-

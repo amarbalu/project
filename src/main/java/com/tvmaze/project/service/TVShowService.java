@@ -1,31 +1,44 @@
 package com.tvmaze.project.service;
 
 import com.tvmaze.project.model.TVShow;
+import com.tvmaze.project.repository.TVShowRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
+import java.util.Optional;
 import java.util.List;
 
 @Service
 public class TVShowService {
-    private final List<TVShow> tvShows = new ArrayList<>(); // In-memory storage
+
+    private final TVShowRepository tvShowRepository;
+
+    public TVShowService(TVShowRepository tvShowRepository) {
+        this.tvShowRepository = tvShowRepository;
+    }
 
     // Get all TV shows
     public List<TVShow> getAllTVShows() {
-        return tvShows;
+        return tvShowRepository.findAll();
     }
 
     // Get a single TV show by ID
-    public TVShow getTVShowById(String id) {
-        return tvShows.stream()
-                .filter(show -> show.getId().equals(id))
-                .findFirst()
-                .orElse(null);
+    public TVShow getTVShowById(Long id) {
+        return tvShowRepository.findById(id).orElseThrow(() -> 
+            new RuntimeException("TV Show not found with ID: " + id));
     }
 
-    // Add a new TV show
-    public void addTVShow(TVShow tvShow) {
-        tvShows.add(tvShow);
+    // Add or update a TV show
+    public TVShow addOrUpdateTVShow(TVShow tvShow) {
+     TVShow existingTVShow = tvShowRepository.findByName(tvShow.getName());
+
+    if (existingTVShow != null) {
+        // Update the existing entity
+        existingTVShow.setSummary(tvShow.getSummary());
+        existingTVShow.setStatus(tvShow.getStatus());
+        existingTVShow.setNetwork(tvShow.getNetwork());
+        return tvShowRepository.save(existingTVShow);
+    } else {
+        // Save as a new entity
+        return tvShowRepository.save(tvShow);
+    }
     }
 }
-

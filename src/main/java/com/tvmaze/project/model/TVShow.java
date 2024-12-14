@@ -1,19 +1,42 @@
 package com.tvmaze.project.model;
 
-public class TVShow {
-    private String id; // Unique identifier for the show
-    private String name; // Name of the show
-    private String summary; // Summary of the show
-    private String network; // TV network (e.g., NBC)
-    private String status; // Show status (e.g., Running, Ended)
 
-    // Getters and Setters
-    public String getId() {
+import jakarta.persistence.*;
+
+@Entity
+public class TVShow {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Version
+    private int version; // Hibernate uses this for optimistic locking
+
+    @Column(name = "tvshow_name", unique = true, nullable = false)
+    private String name;
+
+    private String summary;
+    private String status;
+
+    @Embedded
+    private Network network;
+
+    // Getters and setters
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 
     public String getName() {
@@ -32,14 +55,6 @@ public class TVShow {
         this.summary = summary;
     }
 
-    public String getNetwork() {
-        return network;
-    }
-
-    public void setNetwork(String network) {
-        this.network = network;
-    }
-
     public String getStatus() {
         return status;
     }
@@ -47,5 +62,26 @@ public class TVShow {
     public void setStatus(String status) {
         this.status = status;
     }
-}
 
+    public Network getNetwork() {
+        return network;
+    }
+
+    public void setNetwork(Network network) {
+        this.network = network;
+    }
+
+    @Embeddable
+    public static class Network {
+        @Column(name = "network_name")
+        private String name;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+    }
+}

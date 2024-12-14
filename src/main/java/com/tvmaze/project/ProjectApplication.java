@@ -1,23 +1,23 @@
 package com.tvmaze.project;
-import com.tvmaze.project.service.FileReaderService;
 
+import com.tvmaze.project.service.FileReaderService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class ProjectApplication implements CommandLineRunner {
-	 @Autowired
+
+    @Autowired
     private FileReaderService fileReaderService;
 
-	public static void main(String[] args) {
-		SpringApplication.run(ProjectApplication.class, args);
-	}
-	@Override
-    public void run(String... args) {
-        // Load data from tvtitles.txt
-        fileReaderService.loadTVShowsFromFile();
+    public static void main(String[] args) {
+        SpringApplication.run(ProjectApplication.class, args);
     }
 
+    @Override
+    public void run(String... args) {
+        fileReaderService.loadTVShowsFromFile();
+    }
 }
